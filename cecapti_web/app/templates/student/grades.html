@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% block title %}Mis Cursos y Calificaciones{%
+endblock %} {% block content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 48px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h1 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Mis Cursos y Calificaciones
+  </h1>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Curso</th>
+        <th>Instructor</th>
+        <th>Horas</th>
+        <th>Calificación Final</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inscripcion in inscripciones %}
+      <tr>
+        <td>{{ inscripcion.curso.nombre_curso }}</td>
+        <td>
+          {{ inscripcion.curso.instructor.nombre_completo if
+          inscripcion.curso.instructor else '-' }}
+        </td>
+        <td>{{ inscripcion.curso.horas_duracion }}</td>
+        <td>
+          {% if inscripcion.calificacion_final is not none %}
+          <span class="badge rounded-pill bg-success fs-6"
+            >{{ inscripcion.calificacion_final }}</span
+          >
+          {% else %}
+          <span class="text-muted">Aún sin calificar</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if inscripciones|length == 0 %}
+<div class="alert alert-info">No tienes cursos inscritos actualmente.</div>
+{% endif %} {% endblock %}

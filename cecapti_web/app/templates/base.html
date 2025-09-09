@@ -98,8 +98,15 @@
           {% elif current_user.rol.nombre_rol|lower == 'instructor' %}
           <li class="nav-item mb-2">
             <a
-              class="nav-link {% if request.path == url_for('main.dashboard') %}active fw-bold{% endif %}"
-              href="{{ url_for('main.dashboard') }}"
+              class="nav-link {% if request.path == url_for('main.dashboard') or request.path == url_for('main.instructor_index') %}active fw-bold{% endif %}"
+              href="{{ url_for('main.instructor_index') }}"
+              >Dashboard</a
+            >
+          </li>
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link {% if request.path == url_for('main.instructor_courses') %}active fw-bold{% endif %}"
+              href="{{ url_for('main.instructor_courses') }}"
               >Mis Cursos</a
             >
           </li>

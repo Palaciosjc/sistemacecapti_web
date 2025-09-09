@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block title %}Inscribir Alumno{% endblock %} {%
+block content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Inscribir Alumno en
+    <span style="color: #222">{{ curso.nombre_curso }}</span>
+  </h2>
+</div>
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card summary-card p-4 mb-4">
+      <div class="card-body">
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.alumno.label(class_='form-label fw-semibold') }} {{
+            form.alumno(class_='form-select') }}
+          </div>
+          <div class="d-grid">
+            {{ form.submit(class_='btn btn-primary btn-lg') }}
+          </div>
+        </form>
+      </div>
+    </div>
+    <a href="{{ url_for('main.instructor_courses') }}" class="btn btn-link mt-2"
+      ><i class="fas fa-arrow-left me-1"></i> Volver a mis cursos</a
+    >
+  </div>
+</div>
+{% endblock %}

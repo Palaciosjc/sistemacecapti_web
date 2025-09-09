@@ -1,0 +1,162 @@
+{% extends 'base.html' %} {% block title %}Panel del Instructor{% endblock %} {%
+block content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Bienvenido, {{ current_user.nombre_completo }}
+  </h2>
+</div>
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex align-items-center">
+        <i class="fas fa-book fa-2x me-3" style="color: #ffb800"></i>
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">
+            {{ total_cursos }}
+          </div>
+          <div class="fw-semibold">Cursos Asignados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex align-items-center">
+        <i class="fas fa-users fa-2x me-3" style="color: #ffb800"></i>
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">
+            {{ total_alumnos }}
+          </div>
+          <div class="fw-semibold">Alumnos a Cargo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex align-items-center">
+        <i class="fas fa-clipboard-list fa-2x me-3" style="color: #ffb800"></i>
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">{{ pendientes }}</div>
+          <div class="fw-semibold">Pendientes por Calificar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Tarjetas resumen y resto del contenido conservado -->
+<div class="row">
+  <div class="col-md-4">
+    <div class="list-group" id="courses-list">
+      {% for c in cursos %}
+      <button
+        type="button"
+        class="list-group-item list-group-item-action"
+        onclick="loadStudents({{ c.id_curso }}, this)"
+      >
+        <i class="fas fa-book me-2"></i> {{ c.nombre_curso }}
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div
+      id="details-panel"
+      class="card p-4 shadow-sm"
+      style="min-height: 250px"
+    >
+      <span class="text-muted">Selecciona un curso para ver los alumnos.</span>
+    </div>
+    <div id="inscribir-panel" class="mt-3"></div>
+  </div>
+</div>
+<script>
+  function loadStudents(courseId, element) {
+    document
+      .querySelectorAll("#courses-list .list-group-item")
+      .forEach((btn) => btn.classList.remove("active"));
+    element.classList.add("active");
+    const panel = document.getElementById("details-panel");
+    panel.innerHTML =
+      '<div class="text-center py-5"><div class="spinner-border text-warning" role="status"></div></div>';
+    fetch(`/api/course/${courseId}/students`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.error) {
+          panel.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+          document.getElementById("inscribir-panel").innerHTML = "";
+          return;
+        }
+        if (data.length === 0) {
+          panel.innerHTML =
+            '<div class="alert alert-info">No hay alumnos inscritos en este curso.</div>';
+        } else {
+          let html = `<table class="table table-striped align-middle"><thead><tr>
+          <th>Nombre</th><th>Calificación Actual</th><th>Nueva Calificación</th><th>Acción</th></tr></thead><tbody>`;
+          data.forEach((al) => {
+            html += `<tr>
+            <td>${al.nombre}</td>
+            <td>${
+              al.calificacion !== null
+                ? al.calificacion
+                : '<span class="text-muted">Sin calificar</span>'
+            }</td>
+            <td><input type=\"number\" min=\"0\" max=\"20\" step=\"0.1\" class=\"form-control\" id=\"grade-${
+              al.inscription_id
+            }\" value=\"${
+              al.calificacion !== null ? al.calificacion : ""
+            }\"></td>
+            <td><button class=\"btn btn-primary btn-sm\" onclick=\"saveGrade(${
+              al.inscription_id
+            }, ${courseId})\"><i class=\"fas fa-save\"></i> Guardar</button></td>
+          </tr>`;
+          });
+          html += "</tbody></table>";
+          panel.innerHTML = html;
+        }
+        // Mostrar botón para inscribir alumno
+        document.getElementById(
+          "inscribir-panel"
+        ).innerHTML = `<a href='/instructor/course/${courseId}/inscribir' class='btn btn-success'><i class='fas fa-user-plus me-1'></i>Inscribir alumno</a>`;
+      });
+  }
+  function saveGrade(inscriptionId, courseId) {
+    const input = document.getElementById(`grade-${inscriptionId}`);
+    const nota = input.value;
+    if (nota === "" || isNaN(nota) || nota < 0 || nota > 20) {
+      input.classList.add("is-invalid");
+      return;
+    }
+    input.classList.remove("is-invalid");
+    fetch(`/api/inscription/${inscriptionId}/grade`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ calificacion: nota }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          loadStudents(
+            courseId,
+            document.querySelector(`#courses-list .active`)
+          );
+          alert("Calificación guardada correctamente");
+        } else {
+          alert(data.error || "Error al guardar");
+        }
+      });
+  }
+</script>
+{% endblock %}

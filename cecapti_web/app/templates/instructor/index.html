@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% block title %}Panel Instructor{% endblock %} {%
+block content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Bienvenido, {{ current_user.nombre_completo }}
+  </h2>
+</div>
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex align-items-center">
+        <i class="fas fa-book fa-2x me-3" style="color: #ffb800"></i>
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">
+            {{ total_cursos }}
+          </div>
+          <div class="fw-semibold">Cursos Asignados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex align-items-center">
+        <i class="fas fa-users fa-2x me-3" style="color: #ffb800"></i>
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">
+            {{ total_alumnos }}
+          </div>
+          <div class="fw-semibold">Alumnos a Cargo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex align-items-center">
+        <i class="fas fa-clipboard-list fa-2x me-3" style="color: #ffb800"></i>
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">{{ pendientes }}</div>
+          <div class="fw-semibold">Pendientes por Calificar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

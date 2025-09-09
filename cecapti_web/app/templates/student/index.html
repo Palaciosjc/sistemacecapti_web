@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block title %}Panel Alumno{% endblock %} {% block
+content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Bienvenido de nuevo, {{ current_user.nombre_completo }}
+  </h2>
+</div>
+<p class="lead">Desde aquí puedes consultar tus cursos y calificaciones.</p>
+{% endblock %}
