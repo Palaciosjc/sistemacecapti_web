@@ -1,0 +1,177 @@
+{% extends 'base.html' %} {% block title %}Panel Instructor{% endblock %} {%
+block content %}
+<div class="container-fluid px-0">
+  <!-- Header con gradiente y logo -->
+  <div
+    class="rounded-4 mb-4 p-4 text-center text-white"
+    style="
+      background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
+      box-shadow: 0 4px 24px rgba(255, 193, 7, 0.15);
+    "
+  >
+    <img
+      src="{{ url_for('static', filename='img/logo_cecapti.png') }}"
+      alt="Logo CECAPTI"
+      style="height: 70px; margin-bottom: 10px"
+    />
+    <h1 class="fw-bold mb-1" style="font-size: 2.2rem">Panel del Instructor</h1>
+    <div class="lead">
+      Gestiona tus cursos y calificaciones de manera profesional
+    </div>
+  </div>
+  <!-- Tarjetas resumen -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div
+        class="card border-0 shadow-sm h-100"
+        style="
+          background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
+          color: #fff;
+        "
+      >
+        <div class="card-body d-flex align-items-center">
+          <div class="me-3"><i class="fas fa-book fa-2x"></i></div>
+          <div>
+            <div class="h4 mb-0">{{ cursos|length }}</div>
+            <div class="small">Cursos Asignados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div
+        class="card border-0 shadow-sm h-100"
+        style="
+          background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+          color: #fff;
+        "
+      >
+        <div class="card-body d-flex align-items-center">
+          <div class="me-3"><i class="fas fa-users fa-2x"></i></div>
+          <div>
+            <div class="h4 mb-0">{{ alumnos_totales }}</div>
+            <div class="small">Alumnos Totales</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div
+        class="card border-0 shadow-sm h-100"
+        style="
+          background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+          color: #fff;
+        "
+      >
+        <div class="card-body d-flex align-items-center">
+          <div class="me-3"><i class="fas fa-clipboard-check fa-2x"></i></div>
+          <div>
+            <div class="h4 mb-0">{{ pendientes }}</div>
+            <div class="small">Pendientes por Calificar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Panel principal -->
+  <div class="row">
+    <!-- Columna izquierda: Cursos -->
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div
+          class="card-header bg-white fw-bold text-primary d-flex align-items-center"
+          style="font-size: 1.1rem"
+        >
+          <i class="fas fa-book me-2"></i> Mis Cursos
+        </div>
+        <ul class="list-group list-group-flush" id="course-list">
+          {% for curso in cursos %}
+          <li
+            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
+            style="cursor: pointer; border-left: 4px solid #ffb347"
+            onclick="loadStudents({{ curso.id_curso }}, this)"
+          >
+            <span class="fw-semibold">{{ curso.nombre_curso }}</span>
+            <span class="badge bg-primary rounded-pill"
+              >{{ curso.inscripciones|length if curso.inscripciones else 0
+              }}</span
+            >
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <!-- Columna derecha: Alumnos -->
+    <div class="col-md-8">
+      <div id="student-details" class="card shadow-sm p-4">
+        <div class="text-muted">
+          Selecciona un curso de la lista para ver los alumnos.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function loadStudents(courseId, el) {
+    document
+      .querySelectorAll("#course-list .list-group-item")
+      .forEach((item) => item.classList.remove("active"));
+    if (el) el.classList.add("active");
+    fetch(`/course/${courseId}/students`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        let html = `<h2 class='mb-3 fw-bold text-primary'>${data.course_name}</h2>`;
+        if (data.students.length === 0) {
+          html += `<div class='alert alert-info'>No hay alumnos inscritos en este curso.</div>`;
+        } else {
+          html += `<div class='table-responsive'><table class='table table-hover align-middle'>`;
+          html += `<thead class='table-light'><tr><th>Nombre del Alumno</th><th>Calificación Actual</th><th>Nueva Calificación</th><th>Acción</th></tr></thead><tbody>`;
+          data.students.forEach((stu) => {
+            html += `<tr id='row-${stu.inscription_id}'>`;
+            html += `<td>${stu.student_name}</td>`;
+            html += `<td class='current-grade'>${
+              stu.grade !== null ? stu.grade : "-"
+            }</td>`;
+            html += `<td><div class='input-group input-group-sm'><span class='input-group-text'><i class='fas fa-pen'></i></span><input type='number' min='0' max='20' class='form-control' id='grade-${
+              stu.inscription_id
+            }' value='${stu.grade !== null ? stu.grade : ""}'></div></td>`;
+            html += `<td><button class='btn btn-success btn-sm' onclick='saveGrade(${stu.inscription_id}, this)'><i class='fas fa-save'></i> Guardar</button></td>`;
+            html += `</tr>`;
+          });
+          html += `</tbody></table></div>`;
+        }
+        document.getElementById("student-details").innerHTML = html;
+      });
+  }
+  function saveGrade(inscriptionId, btn) {
+    const input = document.getElementById("grade-" + inscriptionId);
+    const grade = input.value;
+    btn.disabled = true;
+    fetch(`/inscription/${inscriptionId}/grade`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ grade }),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.success) {
+          document.querySelector(
+            `#row-${inscriptionId} .current-grade`
+          ).textContent = grade;
+          input.classList.remove("is-invalid");
+          input.classList.add("is-valid");
+          btn.innerHTML = '<i class="fas fa-check"></i> Guardado';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-save"></i> Guardar';
+          }, 1500);
+        } else {
+          input.classList.add("is-invalid");
+          alert(data.message || "Error al guardar la calificación");
+        }
+      })
+      .finally(() => {
+        btn.disabled = false;
+      });
+  }
+</script>
+{% endblock %}

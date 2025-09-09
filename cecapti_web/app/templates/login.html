@@ -1,0 +1,49 @@
+{% extends 'auth_layout.html' %} {% block title %}Iniciar sesión{% endblock %}
+{% block content %}
+<form method="POST" class="needs-validation" novalidate autocomplete="off">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    <label for="username" class="form-label fw-semibold">Usuario</label>
+    <div class="input-group">
+      <span class="input-group-text bg-white"><i class="fas fa-user"></i></span>
+      {{ form.username(class_='form-control', id='username',
+      placeholder='Usuario', required=True) }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label fw-semibold">Contraseña</label>
+    <div class="input-group">
+      <span class="input-group-text bg-white"><i class="fas fa-lock"></i></span>
+      {{ form.password(class_='form-control', id='password',
+      placeholder='Contraseña', required=True) }}
+    </div>
+  </div>
+  <div class="form-check mb-3">
+    {{ form.remember_me(class_='form-check-input', id='remember_me') }}
+    <label class="form-check-label" for="remember_me">Recordarme</label>
+  </div>
+  <div class="d-grid">
+    <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+  </div>
+</form>
+<script>
+  // Validación Bootstrap
+  (() => {
+    "use strict";
+    const forms = document.querySelectorAll(".needs-validation");
+    Array.from(forms).forEach((form) => {
+      form.addEventListener(
+        "submit",
+        (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>
+{% endblock %}

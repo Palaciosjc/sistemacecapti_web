@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block title %}Mis Cursos y Calificaciones{%
+endblock %} {% block content %}
+<h2 class="mb-4">Mis Cursos y Calificaciones</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nombre del Curso</th>
+      <th>Descripción</th>
+      <th>Horas</th>
+      <th>Calificación Final</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for inscripcion in inscripciones %}
+    <tr>
+      <td>{{ inscripcion.curso.nombre_curso }}</td>
+      <td>{{ inscripcion.curso.descripcion }}</td>
+      <td>{{ inscripcion.curso.horas_duracion }}</td>
+      <td>
+        {% if inscripcion.calificacion_final is not none %} {{
+        inscripcion.calificacion_final }} {% else %}
+        <span class="text-muted">Aún sin calificar</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if inscripciones|length == 0 %}
+<div class="alert alert-info">No tienes cursos inscritos actualmente.</div>
+{% endif %} {% endblock %}

@@ -1,0 +1,67 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.main-header {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.header-gradient {
+    background: linear-gradient(90deg, #FFB800 0%, #FF6F00 100%);
+    /* Amarillo CAT a naranja */
+    min-height: 70px;
+}
+
+main {
+    margin: 2em auto;
+    max-width: 1200px;
+    background: #fff;
+    padding: 2em;
+    border-radius: 14px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+}
+
+/* Botones corporativos */
+.btn-primary {
+    background-color: #FFB800;
+    border-color: #FFB800;
+    color: #222;
+    font-weight: 600;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #FF6F00;
+    border-color: #FF6F00;
+    color: #fff;
+}
+.btn-outline-dark {
+    border-color: #FFB800;
+    color: #FFB800;
+    font-weight: 600;
+}
+.btn-outline-dark:hover, .btn-outline-dark:focus {
+    background: #FFB800;
+    color: #fff;
+}
+
+/* Cards resumen */
+.summary-card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(255, 184, 0, 0.10);
+    background: #fffbe7;
+}
+.summary-card .card-body {
+    padding: 1.5rem 1.2rem;
+}
+
+/* Tablas */
+.table thead {
+    background: #FFB800;
+    color: #222;
+    font-weight: 600;
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fff7e0;
+}

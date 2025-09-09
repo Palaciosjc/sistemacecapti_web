@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% block title %}Gestionar Inscripciones{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 48px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Inscripciones
+  </h2>
+</div>
+<div class="d-flex justify-content-between mb-3">
+  <a href="{{ url_for('main.add_inscription') }}" class="btn btn-primary"
+    ><i class="fas fa-plus me-1"></i> Nueva Inscripción</a
+  >
+  <a
+    href="{{ url_for('main.export_inscriptions') }}"
+    class="btn btn-outline-dark"
+    ><i class="fas fa-file-csv me-1"></i> Exportar a CSV</a
+  >
+</div>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Alumno</th>
+        <th>Curso</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in inscripciones %}
+      <tr>
+        <td>{{ i.id_inscripcion }}</td>
+        <td>{{ i.alumno.nombre_completo }}</td>
+        <td>{{ i.curso.nombre_curso }}</td>
+        <td>
+          <form
+            action="{{ url_for('main.delete_inscription', id=i.id_inscripcion) }}"
+            method="post"
+            style="display: inline"
+          >
+            <button
+              type="submit"
+              class="btn btn-sm btn-danger"
+              onclick="return confirm('¿Eliminar inscripción?')"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

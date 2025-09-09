@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Iniciar sesión{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body class="bg-light">
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div
+        class="alert alert-{{ category }} alert-dismissible fade show mt-3"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+      <div
+        class="row justify-content-center align-items-center"
+        style="height: 100vh"
+      >
+        <div class="col-md-7 col-lg-5">
+          <div
+            class="card shadow-lg border-0 p-4"
+            style="border-radius: 18px; background: #fffbe7"
+          >
+            <div class="text-center mb-3">
+              <img
+                src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+                alt="Logo CECAPTI"
+                style="
+                  height: 70px;
+                  background: #fff;
+                  border-radius: 10px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                  margin-bottom: 10px;
+                  padding: 4px 8px;
+                "
+              />
+              <h2
+                class="fw-bold mb-0"
+                style="color: #ff6f00; letter-spacing: 1px"
+              >
+                Iniciar sesión
+              </h2>
+              <p class="text-muted mb-0" style="font-size: 1.1em">
+                Accede a tu cuenta CECAPTI
+              </p>
+            </div>
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

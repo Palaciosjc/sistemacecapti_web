@@ -1,0 +1,226 @@
+{% extends 'base.html' %} {% block title %}Panel Administrador{% endblock %} {%
+block content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Panel de Administración
+  </h2>
+</div>
+<ul
+  class="nav nav-tabs mb-3"
+  id="adminTab"
+  role="tablist"
+  style="font-weight: 600"
+>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link active"
+      id="users-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#users"
+      type="button"
+      role="tab"
+    >
+      Usuarios
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="courses-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#courses"
+      type="button"
+      role="tab"
+    >
+      Cursos
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="machinery-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#machinery"
+      type="button"
+      role="tab"
+    >
+      Maquinaria
+    </button>
+  </li>
+</ul>
+<div class="tab-content" id="adminTabContent">
+  <!-- Usuarios -->
+  <div class="tab-pane fade show active" id="users" role="tabpanel">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4 class="fw-bold" style="color: #ff6f00">Gestión de Usuarios</h4>
+      <a href="{{ url_for('main.add_user') }}" class="btn btn-primary"
+        ><i class="fas fa-user-plus me-1"></i> Agregar Usuario</a
+      >
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Nombre completo</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in usuarios %}
+          <tr>
+            <td>{{ user.id_usuario }}</td>
+            <td>{{ user.nombre_usuario }}</td>
+            <td>{{ user.nombre_completo }}</td>
+            <td>{{ user.rol.nombre_rol }}</td>
+            <td>
+              <a
+                href="{{ url_for('main.edit_user', user_id=user.id_usuario) }}"
+                class="btn btn-sm btn-primary"
+                ><i class="fas fa-edit"></i
+              ></a>
+              <form
+                action="{{ url_for('main.delete_user', user_id=user.id_usuario) }}"
+                method="post"
+                style="display: inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-danger"
+                  onclick="return confirm('¿Eliminar usuario?')"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Cursos -->
+  <div class="tab-pane fade" id="courses" role="tabpanel">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4 class="fw-bold" style="color: #ff6f00">Gestión de Cursos</h4>
+      <a href="{{ url_for('main.add_course') }}" class="btn btn-primary"
+        ><i class="fas fa-plus me-1"></i> Agregar Curso</a
+      >
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Horas</th>
+            <th>Instructor</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for course in cursos %}
+          <tr>
+            <td>{{ course.id_curso }}</td>
+            <td>{{ course.nombre_curso }}</td>
+            <td>{{ course.descripcion }}</td>
+            <td>{{ course.horas_duracion }}</td>
+            <td>
+              {{ course.instructor.nombre_completo if course.instructor else ''
+              }}
+            </td>
+            <td>
+              <a
+                href="{{ url_for('main.edit_course', course_id=course.id_curso) }}"
+                class="btn btn-sm btn-primary"
+                ><i class="fas fa-edit"></i
+              ></a>
+              <form
+                action="{{ url_for('main.delete_course', course_id=course.id_curso) }}"
+                method="post"
+                style="display: inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-danger"
+                  onclick="return confirm('¿Eliminar curso?')"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Maquinaria -->
+  <div class="tab-pane fade" id="machinery" role="tabpanel">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4 class="fw-bold" style="color: #ff6f00">Gestión de Maquinaria</h4>
+      <a href="{{ url_for('main.add_machinery') }}" class="btn btn-primary"
+        ><i class="fas fa-plus me-1"></i> Agregar Maquinaria</a
+      >
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Identificador</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in maquinaria %}
+          <tr>
+            <td>{{ m.id_maquinaria }}</td>
+            <td>{{ m.nombre_maquina }}</td>
+            <td>{{ m.identificador }}</td>
+            <td>{{ m.estado }}</td>
+            <td>
+              <a
+                href="{{ url_for('main.edit_machinery', machinery_id=m.id_maquinaria) }}"
+                class="btn btn-sm btn-primary"
+                ><i class="fas fa-edit"></i
+              ></a>
+              <form
+                action="{{ url_for('main.delete_machinery', machinery_id=m.id_maquinaria) }}"
+                method="post"
+                style="display: inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-danger"
+                  onclick="return confirm('¿Eliminar maquinaria?')"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

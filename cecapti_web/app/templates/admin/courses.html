@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block title %}Gestionar Cursos{% endblock %} {%
+block content %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 48px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Cursos
+  </h2>
+</div>
+<div class="d-flex justify-content-end mb-3">
+  <a href="{{ url_for('main.add_course') }}" class="btn btn-primary"
+    ><i class="fas fa-plus me-1"></i> Crear Nuevo Curso</a
+  >
+</div>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Duración (horas)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in cursos %}
+      <tr>
+        <td>{{ c.id_curso }}</td>
+        <td>{{ c.nombre_curso }}</td>
+        <td>{{ c.descripcion }}</td>
+        <td>{{ c.horas_duracion }}</td>
+        <td>
+          <a href="#" class="btn btn-sm btn-secondary disabled"
+            ><i class="fas fa-edit"></i
+          ></a>
+          <a href="#" class="btn btn-sm btn-danger disabled"
+            ><i class="fas fa-trash-alt"></i
+          ></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

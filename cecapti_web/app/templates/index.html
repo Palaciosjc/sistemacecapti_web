@@ -1,0 +1,162 @@
+{% extends 'base.html' %} {% block title %}Panel de Administración - CECAPTI{%
+endblock %} {% block content %} {% if current_user.rol.nombre_rol|lower ==
+'administrador' %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 60px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Panel de Administración
+  </h2>
+</div>
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">{{ user_count }}</div>
+          <div class="fw-semibold">Usuarios</div>
+        </div>
+        <i class="fas fa-users fa-2x" style="color: #ffb800"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">
+            {{ course_count }}
+          </div>
+          <div class="fw-semibold">Cursos</div>
+        </div>
+        <i class="fas fa-book fa-2x" style="color: #ffb800"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">
+            {{ machinery_count }}
+          </div>
+          <div class="fw-semibold">Maquinaria</div>
+        </div>
+        <i class="fas fa-truck-monster fa-2x" style="color: #ffb800"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card summary-card h-100">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <div class="h3 fw-bold" style="color: #ff6f00">
+            {{ inscription_count }}
+          </div>
+          <div class="fw-semibold">Inscripciones</div>
+        </div>
+        <i class="fas fa-id-card fa-2x" style="color: #ffb800"></i>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="card mb-4"
+  style="border-radius: 14px; box-shadow: 0 2px 10px rgba(255, 184, 0, 0.1)"
+>
+  <div
+    class="card-header fw-bold"
+    style="background: #ffb800; color: #222; border-radius: 14px 14px 0 0"
+  >
+    Estado de la Maquinaria
+  </div>
+  <div class="card-body bg-white">
+    <canvas id="machineryStatusChart"></canvas>
+  </div>
+</div>
+<script>
+  const ctx = document.getElementById('machineryStatusChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ machinery_status_labels|tojson }},
+      datasets: [{
+        label: '# de Máquinas',
+        data: {{ machinery_status_data|tojson }},
+        backgroundColor: ['#FFB800', '#FF6F00', '#dc3545']
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+</script>
+{% elif current_user.rol.nombre_rol|lower == 'instructor' %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Bienvenido de nuevo, {{ current_user.nombre_completo }}
+  </h2>
+</div>
+<p class="lead">
+  Desde tu panel puedes gestionar tus cursos y calificar a tus alumnos.
+</p>
+{% elif current_user.rol.nombre_rol|lower == 'alumno' %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Bienvenido, {{ current_user.nombre_completo }}
+  </h2>
+</div>
+<p class="lead">Aquí puedes consultar tus cursos y calificaciones.</p>
+{% else %}
+<div class="d-flex align-items-center mb-4">
+  <img
+    src="{{ url_for('static', filename='img/logocecapti.jpg') }}"
+    alt="Logo CECAPTI"
+    style="
+      height: 54px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-right: 18px;
+      padding: 4px 8px;
+    "
+  />
+  <h2 class="fw-bold mb-0" style="color: #ff6f00; letter-spacing: 1px">
+    Bienvenido a CECAPTI-PERU
+  </h2>
+</div>
+{% endif %} {% endblock %}
